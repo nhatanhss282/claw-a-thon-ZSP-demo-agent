@@ -59,6 +59,9 @@ bối cảnh ngành/đối thủ/đối tác xung quanh để BD nắm được 
 - Mặc định: in bản tin ra **stdout** (markdown) để có thể dùng trong chat hoặc lưu file.
 - Có thể lưu thành file `.md` trong thư mục `output/` (xem README.md / agent.py để
   biết cách cấu hình qua biến môi trường hoặc CLI flag).
+- Chế độ web service (`--serve`, dùng để deploy lên GreenNode AgentBase): expose
+  `GET /health` (trả 200) và `POST /invoke` (trả `{"output": "<markdown>"}`), lắng
+  nghe port `8080`/`$PORT` theo Service Contract của AgentBase.
 
 ## Mẫu tham khảo
 

@@ -14,6 +14,15 @@ tong hop thanh ban tin theo 4 truc phuc vu BD cua Zalopay:
 Khong bao gom thong tin rieng ve Zalopay.
 
 Yeu cau: ANTHROPIC_API_KEY trong environment.
+
+Hai che do chay:
+  1. CLI (mac dinh khi co flag --output hoac --once):
+       python agent.py --output report.md
+  2. Web service (de deploy len GreenNode AgentBase):
+       python agent.py --serve
+     -> lang nghe port 8080 (hoac $PORT), expose:
+          GET  /health  -> {"status": "ok"}
+          POST /invoke  -> chay weekly scan va tra ve {"output": "<markdown>"}
 """
 
 import argparse
@@ -104,6 +113,56 @@ def run_weekly_scan(client: anthropic.Anthropic, model: str = DEFAULT_MODEL) -> 
     return "\n".join(parts).strip()
 
 
+def run_cli(args: argparse.Namespace) -> None:
+    client = build_client()
+    report = run_weekly_scan(client, model=args.model)
+
+    print(report)
+
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(report, encoding="utf-8")
+        print(f"\n[Da luu bao cao vao: {out_path}]", file=sys.stderr)
+
+
+def run_server(args: argparse.Namespace) -> None:
+    """
+    Chay agent nhu mot web service tuan thu Service Contract cua
+    GreenNode AgentBase (port 8080, GET /health, POST /invoke).
+    """
+    try:
+        import uvicorn
+        from fastapi import FastAPI, Request
+    except ImportError:
+        sys.exit(
+            "Loi: can 'fastapi' va 'uvicorn' de chay che do --serve.\n"
+            "Cai dat: pip install fastapi uvicorn"
+        )
+
+    app = FastAPI(title="Fintech SEA Weekly Scan Agent")
+    client = build_client()
+
+    @app.get("/health")
+    def health():
+        return {"status": "ok"}
+
+    @app.post("/invoke")
+    async def invoke(request: Request):
+        # payload tu AgentBase (vd: {"input": "..."}) - hien tai agent khong
+        # can input, luon chay weekly scan theo CLAUDE.md.
+        try:
+            await request.json()
+        except Exception:
+            pass
+
+        report = run_weekly_scan(client, model=args.model)
+        return {"output": report}
+
+    port = int(os.environ.get("PORT", "8080"))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fintech SEA Weekly Scan Agent (BD Zalopay)")
     parser.add_argument(
@@ -119,18 +178,17 @@ def main() -> None:
         default=os.environ.get("AGENT_MODEL", DEFAULT_MODEL),
         help=f"Model Claude su dung (mac dinh: {DEFAULT_MODEL})",
     )
+    parser.add_argument(
+        "--serve",
+        action="store_true",
+        help="Chay agent nhu web service (GET /health, POST /invoke) tren port 8080/$PORT",
+    )
     args = parser.parse_args()
 
-    client = build_client()
-    report = run_weekly_scan(client, model=args.model)
-
-    print(report)
-
-    if args.output:
-        out_path = Path(args.output)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(report, encoding="utf-8")
-        print(f"\n[Da luu bao cao vao: {out_path}]", file=sys.stderr)
+    if args.serve:
+        run_server(args)
+    else:
+        run_cli(args)
 
 
 if __name__ == "__main__":
