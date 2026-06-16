@@ -616,230 +616,265 @@ HTML_PAGE = r"""<!DOCTYPE html>
 <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#F5F7FF;color:#111827;min-height:100vh;line-height:1.5}
-.topnav{background:#fff;border-bottom:1.5px solid #E5E7EB;padding:0 32px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
-.nav-logo{display:flex;align-items:center;text-decoration:none;font-size:21px;font-weight:800;letter-spacing:-.5px}
-.logo-z{color:#003FD4}.logo-p{color:#09B24E}
-.nav-div{width:1px;height:22px;background:#E5E7EB}
-.nav-prod{font-size:13px;font-weight:500;color:#6B7280}
-.hero{background:linear-gradient(145deg,#003FD4 0%,#00218F 100%);color:#fff;padding:44px 24px 50px;text-align:center}
-.hero-tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:99px;font-size:11px;font-weight:600;letter-spacing:1.1px;text-transform:uppercase;padding:4px 14px;margin-bottom:16px}
-.hero h1{font-size:28px;font-weight:800;margin-bottom:12px;letter-spacing:-.5px}
-.hero-sub{font-size:14px;opacity:.85;max-width:560px;margin:0 auto 24px;line-height:1.7}
-.team-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
-.team-tab{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);border-radius:99px;padding:6px 18px;font-size:13px;font-weight:600;cursor:pointer;color:#fff;transition:all .15s}
-.team-tab.active{background:#fff;color:#003FD4;border-color:#fff}
-.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;margin:0 auto}
-.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:500}
-.bd-chips,.product-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;margin:0 auto}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#F2F4F8;color:#1A1A2E;min-height:100vh;line-height:1.5}
+.topnav{background:#fff;padding:0 28px;height:54px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;border-bottom:1px solid #E3E8F0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.nav-logo{display:flex;align-items:center;text-decoration:none}
+.nav-logo img{height:28px;width:auto;display:block}
+.nav-sep{width:1px;height:20px;background:rgba(0,0,0,.15);margin:0 4px}
+.nav-prod{font-size:12px;font-weight:500;color:#9CA3AF;letter-spacing:.2px}
+.hero{background:linear-gradient(135deg,#071524 0%,#0D1B2A 45%,#081E10 100%);color:#fff;padding:48px 20px 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 20% 50%,rgba(0,207,106,.07) 0%,transparent 70%),radial-gradient(ellipse 50% 70% at 80% 30%,rgba(0,195,201,.06) 0%,transparent 70%);pointer-events:none}
+.hero-badge{position:relative;display:inline-flex;align-items:center;gap:7px;background:rgba(0,207,106,.1);border:1px solid rgba(0,207,106,.28);border-radius:99px;font-size:11px;font-weight:600;letter-spacing:.9px;text-transform:uppercase;padding:4px 14px;margin-bottom:18px;color:#00CF6A}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#00CF6A;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero h1{position:relative;font-size:28px;font-weight:800;margin-bottom:10px;letter-spacing:-.5px;line-height:1.2}
+.hero-sub{position:relative;font-size:14px;opacity:.65;max-width:500px;margin:0 auto 28px;line-height:1.7}
+.team-tabs{position:relative;display:inline-flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:4px;gap:4px;margin-bottom:24px}
+.team-tab{display:flex;align-items:center;gap:7px;background:transparent;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.5);transition:all .2s;white-space:nowrap}
+.team-tab .ti{font-size:15px}
+.team-tab.active{background:#00CF6A;color:#071524;box-shadow:0 2px 10px rgba(0,207,106,.35)}
+.bd-chips,.product-chips{position:relative;display:flex;flex-wrap:wrap;gap:7px;justify-content:center;max-width:680px;margin:0 auto}
 .product-chips{display:none}
-.container{max-width:820px;margin:0 auto;padding:28px 16px 60px}
-.card{background:#fff;border-radius:12px;padding:24px;border:1px solid #E5E7EB;margin-bottom:16px}
-.sec-label{font-size:11px;font-weight:700;color:#003FD4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.sec-label::before{content:'';display:block;width:3px;height:13px;background:#003FD4;border-radius:2px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-.field label{display:block;font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.topic-chip{background:rgba(0,207,106,.14);border:1px solid rgba(0,207,106,.45);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:500;color:#00CF6A;cursor:default;user-select:none}
+.container{max-width:980px;margin:0 auto;padding:24px 16px 60px}
+.layout{display:grid;grid-template-columns:1fr 290px;gap:16px;align-items:start}
+@media(max-width:720px){.layout{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:14px;padding:22px;border:1px solid #E3E8F0;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.sec-label{font-size:10px;font-weight:700;color:#00A855;text-transform:uppercase;letter-spacing:.9px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';display:block;width:3px;height:12px;background:linear-gradient(180deg,#00CF6A,#00C3C9);border-radius:2px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:480px){.form-row{grid-template-columns:1fr}}
+.field label{display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
 .field-note{font-size:11px;color:#9CA3AF;margin-top:5px}
-select,input[type=text]{width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:14px;color:#111827;background:#fff;transition:border-color .15s,box-shadow .15s}
-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer}
-select:focus,input[type=text]:focus{outline:none;border-color:#003FD4;box-shadow:0 0 0 3px rgba(0,63,212,.1)}
-.field-full{margin-bottom:18px}
-.team-field{display:block}
-.product-field{display:none}
-.run-btn{display:block;width:100%;background:#003FD4;color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s}
-.run-btn:hover:not(:disabled){background:#002BAD;transform:translateY(-1px)}
+.seg-hint{font-size:11px;color:#374151;margin-top:6px;padding:6px 10px;background:#F0FFF8;border-radius:6px;border-left:2px solid #00CF6A;line-height:1.6;min-height:20px;transition:all .2s}
+select,input[type=text]{width:100%;padding:9px 12px;border:1.5px solid #E3E8F0;border-radius:8px;font-size:14px;color:#1A1A2E;background:#fff;transition:border-color .15s,box-shadow .15s}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;padding-right:32px}
+select:focus,input[type=text]:focus{outline:none;border-color:#00CF6A;box-shadow:0 0 0 3px rgba(0,207,106,.1)}
+.geo-chips{display:flex;flex-wrap:wrap;gap:8px}
+.geo-chip{background:#F2F4F8;border:1.5px solid #E3E8F0;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:500;color:#6B7280;cursor:pointer;transition:all .18s}
+.geo-chip.active{background:#F0FFF8;border-color:#00CF6A;color:#00875A;font-weight:600}
+.sidebar-card{background:#fff;border-radius:14px;padding:22px;border:1px solid #E3E8F0;box-shadow:0 1px 3px rgba(0,0,0,.05);position:sticky;top:68px}
+.run-btn{display:block;width:100%;background:linear-gradient(135deg,#00CF6A 0%,#00C3C9 100%);color:#071524;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.2px}
+.run-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,207,106,.3)}
 .run-btn:active:not(:disabled){transform:translateY(0)}
-.run-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
-.progress{display:none;margin-top:18px}
-.pbar-track{height:3px;background:#E5EDFF;border-radius:2px;overflow:hidden}
-.pbar-fill{height:100%;width:40%;background:linear-gradient(90deg,#003FD4,#09B24E);border-radius:2px;animation:bar 1.6s ease-in-out infinite}
+.run-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.progress{display:none;margin-top:14px}
+.pbar-track{height:3px;background:#E3E8F0;border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;width:40%;background:linear-gradient(90deg,#00CF6A,#00C3C9);border-radius:2px;animation:bar 1.6s ease-in-out infinite}
 @keyframes bar{0%{transform:translateX(-150%)}100%{transform:translateX(350%)}}
-.pstatus{font-size:13px;color:#6B7280;margin-top:10px;display:flex;align-items:center;gap:8px}
-.pdot{width:6px;height:6px;border-radius:50%;background:#003FD4;animation:dot 1.4s ease-in-out infinite}
-@keyframes dot{0%,100%{opacity:1}50%{opacity:.25}}
-.err{display:none;margin-top:14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:12px 16px;color:#B91C1C;font-size:13px}
+.pstatus{font-size:12px;color:#6B7280;margin-top:9px;display:flex;align-items:center;gap:7px}
+.pdot{width:6px;height:6px;border-radius:50%;background:#00CF6A;animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.err{display:none;margin-top:12px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 13px;color:#B91C1C;font-size:12px}
+.meta-list{margin-top:16px;padding-top:14px;border-top:1px solid #F2F4F8;display:flex;flex-direction:column;gap:7px}
+.meta-item{display:flex;align-items:center;gap:9px;font-size:12px;color:#6B7280}
+.meta-dot{width:7px;height:7px;border-radius:50%;background:#D1D5DB;flex-shrink:0;transition:background .2s}
+.meta-dot.on{background:#00CF6A}
 .result-card{display:none}
-.result-top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid #F3F4F6;margin-bottom:20px}
-.result-top h2{font-size:16px;font-weight:700;color:#111827}
-.result-meta{font-size:12px;color:#9CA3AF;margin-top:4px}
-.dl-btn{flex-shrink:0;background:#F3F4F6;color:#374151;border:1.5px solid #E5E7EB;padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;margin-left:12px}
-.dl-btn:hover{background:#E5EDFF;border-color:#003FD4;color:#003FD4}
+.result-top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:13px;border-bottom:1px solid #F2F4F8;margin-bottom:18px}
+.result-top h2{font-size:16px;font-weight:700;color:#1A1A2E}
+.result-meta{font-size:12px;color:#9CA3AF;margin-top:3px}
+.dl-btn{flex-shrink:0;background:#F2F4F8;color:#374151;border:1.5px solid #E3E8F0;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;margin-left:12px}
+.dl-btn:hover{background:#F0FFF8;border-color:#00CF6A;color:#00875A}
 #report{font-size:14px;line-height:1.8;color:#1F2937}
-#report h1{font-size:20px;font-weight:800;margin:0 0 16px;color:#111827}
-#report h2{font-size:16px;font-weight:700;margin:26px 0 10px;color:#003FD4;border-bottom:1px solid #EEF4FF;padding-bottom:7px}
-#report h3{font-size:14px;font-weight:700;margin:18px 0 8px;color:#374151}
-#report ul{padding-left:20px}
-#report li{margin-bottom:10px}
-#report p{margin-bottom:10px}
-#report a{color:#0052E3;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .1s}
-#report a:hover{border-bottom-color:#0052E3}
-#report strong{font-weight:700;color:#111827}
+#report h1{font-size:20px;font-weight:800;margin:0 0 14px;color:#1A1A2E}
+#report h2{font-size:15px;font-weight:700;margin:24px 0 9px;color:#00875A;border-bottom:1px solid #E8F8F0;padding-bottom:6px}
+#report h3{font-size:13px;font-weight:700;margin:16px 0 7px;color:#374151}
+#report ul{padding-left:18px}
+#report li{margin-bottom:9px}
+#report p{margin-bottom:9px}
+#report a{color:#00875A;text-decoration:none;border-bottom:1px dotted #00CF6A;transition:border-color .1s}
+#report a:hover{border-bottom-style:solid}
+#report strong{font-weight:700;color:#1A1A2E}
 #report em{font-style:italic;color:#6B7280}
-#report hr{border:none;border-top:1px solid #F3F4F6;margin:22px 0}
-#report blockquote{border-left:3px solid #003FD4;margin:14px 0;padding:10px 16px;background:#F5F7FF;border-radius:0 8px 8px 0;color:#4B5563;font-style:italic}
-#report code{background:#F3F4F6;padding:2px 6px;border-radius:4px;font-size:13px;font-family:monospace}
+#report hr{border:none;border-top:1px solid #F2F4F8;margin:20px 0}
+#report blockquote{border-left:3px solid #00CF6A;margin:12px 0;padding:9px 14px;background:#F0FFF8;border-radius:0 8px 8px 0;color:#374151}
+#report code{background:#F2F4F8;padding:2px 6px;border-radius:4px;font-size:12px;font-family:monospace}
 </style>
 </head>
 <body>
 <nav class="topnav">
-  <a href="/" class="nav-logo"><span class="logo-z">Zalo</span><span class="logo-p">pay</span></a>
-  <div class="nav-div"></div>
+  <a href="/" class="nav-logo"><img src="data:image/png;base64,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" alt="Zalopay"></a>
+  <div class="nav-sep"></div>
   <span class="nav-prod">Fintech News Weekly Scan</span>
 </nav>
 <div class="hero">
-  <div class="hero-tag">AI Research Agent</div>
+  <div class="hero-badge"><div class="badge-dot"></div>AI Research Agent</div>
   <h1>Fintech News Weekly Scan</h1>
-  <p class="hero-sub">Agent tự động quét tin tức Fintech công khai mỗi tuần, tổng hợp bản tin actionable theo đúng team và mục đích sử dụng.</p>
+  <p class="hero-sub">Agent tự động quét tin tức Fintech công khai mỗi tuần — tổng hợp bản tin actionable theo team và mục đích sử dụng.</p>
   <div class="team-tabs">
-    <button class="team-tab active" onclick="switchTeam('bd',this)">📊 BD Team</button>
-    <button class="team-tab" onclick="switchTeam('product',this)">🚀 Product Team</button>
+    <button class="team-tab active" onclick="switchTeam('bd',this)"><span class="ti">📊</span>BD Team</button>
+    <button class="team-tab" onclick="switchTeam('product',this)"><span class="ti">🚀</span>Product Team</button>
   </div>
   <div class="bd-chips">
-    <div class="chip">📡 Xu hướng Fintech SEA</div>
-    <div class="chip">🚀 Sản phẩm mới đáng chú ý</div>
-    <div class="chip">📊 Chuyển dịch thị trường &amp; đối thủ</div>
-    <div class="chip">📋 Chính sách &amp; quy định mới</div>
-    <div class="chip">💡 Gợi ý trao đổi với đối tác</div>
-    <div class="chip">🆕 Điểm mới vs tuần trước</div>
+    <button class="topic-chip active">📡 Xu hướng Fintech SEA</button>
+    <button class="topic-chip active">🚀 Sản phẩm mới đáng chú ý</button>
+    <button class="topic-chip active">📊 Chuyển dịch thị trường</button>
+    <button class="topic-chip active">📋 Chính sách &amp; quy định</button>
+    <button class="topic-chip active">💡 Gợi ý trao đổi đối tác</button>
+    <button class="topic-chip active">🆕 Điểm mới vs tuần trước</button>
   </div>
   <div class="product-chips">
-    <div class="chip">🎨 Xu hướng UX &amp; Product</div>
-    <div class="chip">🔍 Tính năng mới của đối thủ</div>
-    <div class="chip">⚖️ Benchmark &amp; so sánh tính năng</div>
-    <div class="chip">👥 Insight hành vi người dùng</div>
-    <div class="chip">💡 Cơ hội sản phẩm (Product Ops)</div>
-    <div class="chip">🆕 Điểm mới vs tuần trước</div>
+    <button class="topic-chip active">🎨 Xu hướng UX &amp; Product</button>
+    <button class="topic-chip active">🔍 Tính năng mới đối thủ</button>
+    <button class="topic-chip active">⚖️ Benchmark tính năng</button>
+    <button class="topic-chip active">👥 Insight hành vi người dùng</button>
+    <button class="topic-chip active">💡 Cơ hội sản phẩm</button>
+    <button class="topic-chip active">🆕 Điểm mới vs tuần trước</button>
   </div>
 </div>
 <div class="container">
-  <div class="card">
-    <div class="sec-label">Tùy chỉnh báo cáo</div>
-    <div class="form-grid">
-      <div class="field team-field" id="segmentField">
-        <label for="segment">Segment BD</label>
-        <select id="segment">
-          <option value="general">Tổng quan (General)</option>
-          <optgroup label="── Merchant nội địa ──">
-            <option value="key_merchant_retail">Key Merchant Bán lẻ — Long Châu, siêu thị, F&amp;B lớn</option>
-            <option value="soundbox_smb">Soundbox / Smart POS</option>
-            <option value="smb">SMB / Hộ kinh doanh nhỏ nội địa</option>
-          </optgroup>
-          <optgroup label="── Quốc tế ──">
-            <option value="intl_digital_merchant">Merchant số quốc tế — Canva, Meta Ads, iQIYI, DiDi, app Trung Quốc mở rộng SEA...</option>
-            <option value="intl_psp">Đối tác PSP quốc tế — Boku, dLocal, EBANX, HitPay, Pagsmile, DANAL...</option>
-          </optgroup>
-          <optgroup label="── Đối tác chiến lược ──">
-            <option value="financial_institution">Đối tác Tài chính — Ngân hàng, FinTech lending, InsurTech</option>
-            <option value="telecom_utility">Viễn thông &amp; Tiện ích — EVN, VNPT, Viettel, hoá đơn định kỳ</option>
-            <option value="travel_hospitality">Du lịch &amp; Lữ hành — Hàng không, OTA, khách sạn</option>
-            <option value="edu_healthcare">Giáo dục &amp; Y tế — Học phí, viện phí, edtech, telemedicine</option>
-            <option value="gov_public">Chính phủ &amp; Dịch vụ công — Thuế, VNeID, Đề án 06</option>
-          </optgroup>
-        </select>
-        <div class="field-note">Ảnh hưởng đến tiêu điểm thị trường &amp; talking point</div>
+  <div class="layout">
+    <div>
+      <div class="card">
+        <div class="sec-label">Tùy chỉnh báo cáo</div>
+        <div class="form-row">
+          <div class="field" id="segmentField">
+            <label>🗂 Segment BD</label>
+            <select id="segment" onchange="updateSegDesc()">
+              <option value="general">Tổng quan (General)</option>
+              <optgroup label="Merchant Nội Địa">
+                <option value="key_merchant_retail">Key Merchant Bán lẻ</option>
+                <option value="soundbox_smb">Soundbox / Smart POS</option>
+                <option value="smb">SMB / Hộ kinh doanh nhỏ</option>
+              </optgroup>
+              <optgroup label="Merchant Quốc Tế">
+                <option value="intl_digital_merchant">Merchant số quốc tế</option>
+                <option value="intl_psp">Đối tác PSP quốc tế</option>
+              </optgroup>
+              <optgroup label="Digital Product">
+                <option value="financial_institution">Đối tác Tài chính</option>
+                <option value="telecom_utility">Viễn thông &amp; Tiện ích</option>
+                <option value="travel_hospitality">Du lịch &amp; Lữ hành</option>
+                <option value="edu_healthcare">Giáo dục &amp; Y tế</option>
+                <option value="gov_public">Chính phủ &amp; Dịch vụ công</option>
+              </optgroup>
+            </select>
+            <div id="segDesc" class="seg-hint">Tổng hợp chung — không giới hạn theo ngành cụ thể</div>
+          </div>
+          <div class="field" id="categoryField" style="display:none">
+            <label>💎 Category sản phẩm</label>
+            <select id="category" onchange="updateMeta()">
+              <option value="general">Tổng quan Fintech</option>
+              <option value="payment">Thanh toán (QR / POS / Wallet)</option>
+              <option value="lending">Tín dụng &amp; BNPL</option>
+              <option value="loyalty">Loyalty &amp; Rewards</option>
+              <option value="cross_border">Thanh toán xuyên biên giới</option>
+            </select>
+            <div class="field-note">Ảnh hưởng đến tiêu điểm sản phẩm &amp; benchmark đối thủ</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>🔍 Từ khóa bổ sung <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#9CA3AF;font-size:10px">(tùy chọn)</span></label>
+          <input type="text" id="keywords" placeholder="VD: BNPL, cross-border, Open Banking, stablecoin...">
+          <div class="field-note">Agent ưu tiên tìm thêm chủ đề bạn quan tâm trong tuần này</div>
+        </div>
       </div>
-      <div class="field product-field" id="categoryField">
-        <label for="category">Category sản phẩm</label>
-        <select id="category">
-          <option value="general">Tổng quan Fintech</option>
-          <option value="payment">Thanh toán (QR / POS / Digital Wallet)</option>
-          <option value="lending">Tín dụng &amp; BNPL</option>
-          <option value="loyalty">Loyalty &amp; Rewards</option>
-          <option value="cross_border">Thanh toán xuyên biên giới</option>
-        </select>
-        <div class="field-note">Ảnh hưởng đến tiêu điểm sản phẩm &amp; benchmark đối thủ</div>
+      <div class="card">
+        <div class="sec-label">🌏 Phạm vi địa lý</div>
+        <div class="geo-chips">
+          <button class="geo-chip active" data-val="sea" onclick="selectGeo(this)">🌏 Việt Nam + Đông Nam Á</button>
+          <button class="geo-chip" data-val="vn" onclick="selectGeo(this)">🇻🇳 Chỉ Việt Nam</button>
+          <button class="geo-chip" data-val="sea_ex_vn" onclick="selectGeo(this)">🌐 SEA (không tính VN)</button>
+        </div>
       </div>
-      <div class="field">
-        <label for="market">Phạm vi địa lý</label>
-        <select id="market">
-          <option value="sea">Việt Nam + Đông Nam Á (SEA)</option>
-          <option value="vn">Chỉ Việt Nam</option>
-          <option value="sea_ex_vn">SEA (không tính Việt Nam)</option>
-        </select>
-        <div class="field-note">Giới hạn nguồn tin theo thị trường</div>
+      <div class="card result-card" id="resultCard">
+        <div class="result-top">
+          <div>
+            <h2 id="rTitle">Bản tin tuần</h2>
+            <div class="result-meta" id="rMeta"></div>
+          </div>
+          <button class="dl-btn" onclick="dlReport()">&#8595; Tải .md</button>
+        </div>
+        <div id="report"></div>
       </div>
     </div>
-    <div class="field-full field">
-      <label for="keywords">Từ khóa bổ sung (tùy chọn)</label>
-      <input type="text" id="keywords" placeholder="VD: BNPL, cross-border, Open Banking, stablecoin...">
-      <div class="field-note">Agent sẽ ưu tiên tìm thêm các chủ đề bạn quan tâm trong tuần này</div>
-    </div>
-    <button class="run-btn" id="runBtn" onclick="runScan()">Chạy báo cáo</button>
-    <div class="progress" id="progress">
-      <div class="pbar-track"><div class="pbar-fill"></div></div>
-      <div class="pstatus"><div class="pdot"></div><span id="pmsg">Đang khởi tạo...</span></div>
-    </div>
-    <div class="err" id="errBox"></div>
-  </div>
-  <div class="card result-card" id="resultCard">
-    <div class="result-top">
-      <div>
-        <h2 id="rTitle">Bản tin tuần</h2>
-        <div class="result-meta" id="rMeta"></div>
+    <div>
+      <div class="sidebar-card">
+        <button class="run-btn" id="runBtn" onclick="runScan()">⚡ Chạy báo cáo</button>
+        <div class="progress" id="progress">
+          <div class="pbar-track"><div class="pbar-fill"></div></div>
+          <div class="pstatus"><div class="pdot"></div><span id="pmsg">Đang khởi tạo...</span></div>
+        </div>
+        <div class="err" id="errBox"></div>
+        <div class="meta-list">
+          <div class="meta-item"><div class="meta-dot on" id="mDotTeam"></div><span id="mTeam">BD Team</span></div>
+          <div class="meta-item"><div class="meta-dot" id="mDotSeg"></div><span id="mSeg">Tổng quan</span></div>
+          <div class="meta-item"><div class="meta-dot on" id="mDotGeo"></div><span id="mGeo">VN + Đông Nam Á</span></div>
+        </div>
       </div>
-      <button class="dl-btn" onclick="dlReport()">&#8595; Tải .md</button>
     </div>
-    <div id="report"></div>
   </div>
 </div>
 <script>
 const BD_MSGS=['Đang tìm kiếm tin tức Fintech SEA...','Đang phân tích xu hướng thị trường...','Đang tổng hợp sản phẩm & tính năng mới...','Đang rà soát chính sách & quy định...','Đang theo dõi động thái đối thủ...','Đang soạn gợi ý trao đổi đối tác...','Hoàn thiện bản tin, sắp xong...'];
 const PROD_MSGS=['Đang tìm kiếm tính năng mới của đối thủ...','Đang phân tích xu hướng UX / Product...','Đang benchmark so sánh tính năng...','Đang tổng hợp insight hành vi người dùng...','Đang soạn cơ hội sản phẩm...','Hoàn thiện bản tin Product, sắp xong...'];
 const SEG={'general':'Tổng quan','intl_digital_merchant':'Merchant số quốc tế','intl_psp':'Đối tác PSP quốc tế','key_merchant_retail':'Key Merchant Bán lẻ','soundbox_smb':'Soundbox / Smart POS','smb':'SMB / Hộ KD nhỏ','financial_institution':'Đối tác Tài chính','telecom_utility':'Viễn thông & Tiện ích','travel_hospitality':'Du lịch & Lữ hành','edu_healthcare':'Giáo dục & Y tế','gov_public':'Dịch vụ công'};
-const CAT={'general':'Tổng quan Fintech','payment':'Thanh toán','lending':'Tín dụng & BNPL','loyalty':'Loyalty & Rewards','cross_border':'Thanh toán xuyên biên giới'};
+const SEG_DESC={'general':'Tổng hợp chung — không giới hạn theo ngành cụ thể','key_merchant_retail':'Merchant lớn trong nước: chuỗi bán lẻ, F&B, pharmacy — focus GMV, loyalty, onboarding','soundbox_smb':'Merchant cần thiết bị thanh toán: soundbox, smart POS — focus phổ cập QR và thiết bị tại quầy','smb':'Tiểu thương, hộ kinh doanh nhỏ nội địa — focus onboarding đơn giản, phí thấp, không tiền mặt','intl_digital_merchant':'Nền tảng số quốc tế không entity tại VN: app store, streaming, SaaS, ad network — cross-border payment','intl_psp':'Trung gian thanh toán quốc tế (PSP/aggregator) — kết nối xuyên biên giới, accept local payment method','financial_institution':'Ngân hàng, fintech lending, insurtech — hợp tác nhúng dịch vụ tài chính, co-lending, embedded finance','telecom_utility':'Nhà mạng & dịch vụ công cộng: EVN, VNPT, Viettel — thanh toán hoá đơn định kỳ, bill payment','travel_hospitality':'Hàng không, OTA, khách sạn, lữ hành — thanh toán đặt chỗ, loyalty du lịch, BNPL travel','edu_healthcare':'Trường học, bệnh viện, edtech, telemedicine — học phí, viện phí, thanh toán y tế số','gov_public':'Cơ quan nhà nước, dịch vụ công — thuế, phạt hành chính, VNeID, Đề án 06'};
+const CAT={'general':'Tổng quan Fintech','payment':'Thanh toán','lending':'Tín dụng & BNPL','loyalty':'Loyalty & Rewards','cross_border':'Xuyên biên giới'};
 const MKT={'sea':'VN + SEA','vn':'Việt Nam','sea_ex_vn':'SEA (ngoài VN)'};
-let md='',curTeam='bd';
+let md='',curTeam='bd',curGeo='sea';
 const sl=ms=>new Promise(r=>setTimeout(r,ms));
-function setMsg(i){const msgs=curTeam==='product'?PROD_MSGS:BD_MSGS;document.getElementById('pmsg').textContent=msgs[i%msgs.length]}
+function setMsg(i){const m=curTeam==='product'?PROD_MSGS:BD_MSGS;document.getElementById('pmsg').textContent=m[i%m.length]}
 function showErr(m){const b=document.getElementById('errBox');b.textContent='⚠ '+m;b.style.display='block'}
+function updateMeta(){
+  const seg=document.getElementById('segment').value;
+  const cat=document.getElementById('category').value;
+  const lbl=curTeam==='bd'?(SEG[seg]||seg):(CAT[cat]||cat);
+  document.getElementById('mTeam').textContent=curTeam==='bd'?'📊 BD Team':'🚀 Product Team';
+  document.getElementById('mSeg').textContent=lbl;
+  document.getElementById('mDotSeg').classList.toggle('on',!!lbl);
+  document.getElementById('mGeo').textContent=MKT[curGeo]||curGeo;
+}
+function updateSegDesc(){
+  const v=document.getElementById('segment').value;
+  document.getElementById('segDesc').textContent=SEG_DESC[v]||'';
+  updateMeta();
+}
+function selectGeo(btn){
+  document.querySelectorAll('.geo-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');curGeo=btn.dataset.val;updateMeta();
+}
 function switchTeam(t,btn){
   curTeam=t;
-  document.querySelectorAll('.team-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.team-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   document.querySelector('.bd-chips').style.display=t==='bd'?'flex':'none';
   document.querySelector('.product-chips').style.display=t==='product'?'flex':'none';
   document.getElementById('segmentField').style.display=t==='bd'?'block':'none';
   document.getElementById('categoryField').style.display=t==='product'?'block':'none';
+  updateMeta();
 }
 async function runScan(){
-  const team=curTeam;
-  const seg=document.getElementById('segment').value;
-  const cat=document.getElementById('category').value;
-  const mkt=document.getElementById('market').value;
-  const kw=document.getElementById('keywords').value.trim();
-  const btn=document.getElementById('runBtn');
-  const prog=document.getElementById('progress');
-  const err=document.getElementById('errBox');
-  const rc=document.getElementById('resultCard');
+  const team=curTeam,seg=document.getElementById('segment').value,cat=document.getElementById('category').value,kw=document.getElementById('keywords').value.trim();
+  const btn=document.getElementById('runBtn'),prog=document.getElementById('progress'),err=document.getElementById('errBox'),rc=document.getElementById('resultCard');
   btn.disabled=true;rc.style.display='none';err.style.display='none';prog.style.display='block';setMsg(0);
   try{
-    const payload={team,market:mkt};
-    if(team==='bd') payload.segment=seg; else payload.product_category=cat;
-    if(kw) payload.extra_keywords=kw;
+    const payload={team,market:curGeo};
+    if(team==='bd')payload.segment=seg;else payload.product_category=cat;
+    if(kw)payload.extra_keywords=kw;
     const r=await fetch('/invoke',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const d=await r.json();
     if(!d.job_id)throw new Error(d.error||'Không nhận được job_id');
-    await poll(d.job_id,team,seg,cat,mkt,kw);
+    await poll(d.job_id,team,seg,cat,kw);
   }catch(e){showErr(e.message);prog.style.display='none';btn.disabled=false}
 }
-async function poll(id,team,seg,cat,mkt,kw){
-  const btn=document.getElementById('runBtn');const prog=document.getElementById('progress');
+async function poll(id,team,seg,cat,kw){
+  const btn=document.getElementById('runBtn'),prog=document.getElementById('progress');
   let t=0;
   while(true){
     setMsg(t++);await sl(4000);
     const r=await fetch('/result/'+id);const d=await r.json();
-    if(d.status==='done'){prog.style.display='none';btn.disabled=false;showRpt(d.output,team,seg,cat,mkt,kw);return}
+    if(d.status==='done'){prog.style.display='none';btn.disabled=false;showRpt(d.output,team,seg,cat,kw);return}
     if(d.status==='error'){prog.style.display='none';showErr(d.output);btn.disabled=false;return}
   }
 }
-function showRpt(content,team,seg,cat,mkt,kw){
+function showRpt(content,team,seg,cat,kw){
   md=content;
   const label=team==='product'?(CAT[cat]||cat):(SEG[seg]||seg);
   const teamLabel=team==='product'?'Product':'BD';
-  document.getElementById('rTitle').textContent=`Bản tin tuần — ${teamLabel} · ${label}`;
-  const meta=[MKT[mkt]||mkt];if(kw)meta.push('Keywords: '+kw);
-  document.getElementById('rMeta').textContent=meta.join(' · ');
+  document.getElementById('rTitle').textContent='Bản tin tuần';
+  const meta=[`${teamLabel} · ${label}`,MKT[curGeo]||curGeo];if(kw)meta.push(kw);
+  document.getElementById('rMeta').textContent=meta.join(' · ')+' · '+new Date().toLocaleDateString('vi-VN');
   document.getElementById('report').innerHTML=marked.parse(content);
   const c=document.getElementById('resultCard');c.style.display='block';
   c.scrollIntoView({behavior:'smooth',block:'start'});
@@ -849,6 +884,7 @@ function dlReport(){
   const a=document.createElement('a');a.href=URL.createObjectURL(b);
   a.download='fintech_sea_'+new Date().toISOString().slice(0,10)+'.md';a.click();
 }
+updateMeta();
 </script>
 </body>
 </html>"""
