@@ -1,0 +1,15 @@
+.env
+.env.*
+.greennode.json
+output/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.github/
+.claude/
+*.md
+!CLAUDE.md
+report_output.md
+Invoke-WebRequest
+.agentbase/

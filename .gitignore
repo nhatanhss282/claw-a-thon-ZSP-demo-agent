@@ -1,0 +1,9 @@
+.greennode.json
+.agentbase/
+.env
+.env.*
+output/
+__pycache__/
+*.pyc
+report_output.md
+Invoke-WebRequest

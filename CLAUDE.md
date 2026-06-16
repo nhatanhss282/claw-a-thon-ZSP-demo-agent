@@ -1,4 +1,4 @@
-# Fintech SEA Weekly Scan Agent — CLAUDE.md
+# Fintech News Weekly Scan Agent — CLAUDE.md
 
 ## Vai trò
 

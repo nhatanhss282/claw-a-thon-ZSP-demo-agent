@@ -1,0 +1,125 @@
+name: Deploy to AgentBase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: vcr.vngcloud.vn
+  REPO: 111480-abp111810
+  IMAGE: fintech-news-weekly-scan
+  RUNTIME_ID: runtime-66f8fe0b-a9a3-489b-a315-1c3c7c8cb272
+  FLAVOR: runtime-s2-general-2x4
+  AGENTBASE_API_URL: https://agentbase.api.vngcloud.vn
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: tag
+        run: echo "TAG=v$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          docker build --platform linux/amd64 \
+            -t $REGISTRY/$REPO/$IMAGE:${{ steps.tag.outputs.TAG }} \
+            -t $REGISTRY/$REPO/$IMAGE:latest \
+            .
+
+      - name: Login to AgentBase CR
+        run: |
+          # Lấy IAM token từ GreenNode
+          TOKEN=$(curl -s -X POST "https://iamapis.vngcloud.vn/accounts-api/v2/auth/token" \
+            -H "Content-Type: application/json" \
+            -d "{\"clientId\":\"${{ secrets.GREENNODE_CLIENT_ID }}\",\"clientSecret\":\"${{ secrets.GREENNODE_CLIENT_SECRET }}\"}" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['token'])")
+
+          # Lấy CR credentials
+          CR_RESP=$(curl -s -H "Authorization: Bearer $TOKEN" \
+            "$AGENTBASE_API_URL/cr/api/v1/registry-credential")
+          CR_USER=$(echo $CR_RESP | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['username'])")
+          CR_PASS=$(echo $CR_RESP | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['secret'])")
+
+          echo "$CR_PASS" | docker login $REGISTRY --username "$CR_USER" --password-stdin
+
+      - name: Push image
+        run: |
+          docker push $REGISTRY/$REPO/$IMAGE:${{ steps.tag.outputs.TAG }}
+          docker push $REGISTRY/$REPO/$IMAGE:latest
+
+      - name: Get IAM token
+        id: iam
+        run: |
+          TOKEN=$(curl -s -X POST "https://iamapis.vngcloud.vn/accounts-api/v2/auth/token" \
+            -H "Content-Type: application/json" \
+            -d "{\"clientId\":\"${{ secrets.GREENNODE_CLIENT_ID }}\",\"clientSecret\":\"${{ secrets.GREENNODE_CLIENT_SECRET }}\"}" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['token'])")
+          echo "TOKEN=$TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Get CR imageAuth
+        id: imageauth
+        run: |
+          CR_RESP=$(curl -s -H "Authorization: Bearer ${{ steps.iam.outputs.TOKEN }}" \
+            "$AGENTBASE_API_URL/cr/api/v1/registry-credential")
+          CR_USER=$(echo $CR_RESP | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['username'])")
+          CR_PASS=$(echo $CR_RESP | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['secret'])")
+          # Base64 encode username:password for imageAuth
+          AUTH=$(echo -n "$CR_USER:$CR_PASS" | base64 -w0)
+          echo "AUTH=$AUTH" >> $GITHUB_OUTPUT
+          echo "REGISTRY_URL=$REGISTRY" >> $GITHUB_OUTPUT
+
+      - name: Update AgentBase runtime
+        run: |
+          IMAGE_URL="$REGISTRY/$REPO/$IMAGE:${{ steps.tag.outputs.TAG }}"
+          PAYLOAD=$(python3 -c "
+          import json
+          payload = {
+            'imageUrl': '$IMAGE_URL',
+            'flavorId': '$FLAVOR',
+            'imageAuth': {
+              'registryUrl': '$REGISTRY',
+              'auth': '${{ steps.imageauth.outputs.AUTH }}'
+            }
+          }
+          print(json.dumps(payload))
+          ")
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
+            "$AGENTBASE_API_URL/v1/agent-runtimes/$RUNTIME_ID" \
+            -H "Authorization: Bearer ${{ steps.iam.outputs.TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -1)
+          echo "Response: $BODY"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "Update failed with status $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Wait for ACTIVE
+        run: |
+          for i in $(seq 1 20); do
+            STATUS=$(curl -s \
+              -H "Authorization: Bearer ${{ steps.iam.outputs.TOKEN }}" \
+              "$AGENTBASE_API_URL/v1/agent-runtimes/$RUNTIME_ID" \
+              | python3 -c "import sys,json; print(json.load(sys.stdin).get('status','?'))")
+            echo "[$i] Status: $STATUS"
+            if [ "$STATUS" = "ACTIVE" ]; then
+              echo "Deployment successful!"
+              exit 0
+            fi
+            if [ "$STATUS" = "ERROR" ]; then
+              echo "Deployment failed with ERROR"
+              exit 1
+            fi
+            sleep 15
+          done
+          echo "Timeout waiting for ACTIVE"
+          exit 1
