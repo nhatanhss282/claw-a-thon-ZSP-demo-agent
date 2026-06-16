@@ -1,15 +1,6 @@
 # Fintech SEA Weekly Scan Agent (BD Zalopay)
 
-Agent tự động quét tin tức Fintech Đông Nam Á / Việt Nam trong 7 ngày gần nhất và
-tổng hợp bản tin theo 4 trục phục vụ Business Development:
-
-1. Xu hướng Fintech Đông Nam Á trong tuần
-2. Cập nhật sản phẩm mới đáng chú ý
-3. Thị trường có chuyển dịch gì
-4. Chính sách/quy định mới hỗ trợ công việc BD
-
-Bản tin **không** bao gồm thông tin riêng về Zalopay — chỉ tập trung vào bối cảnh
-ngành/đối thủ/thị trường xung quanh.
+Agent tự động quét tin tức Fintech Đông Nam Á mỗi tuần và tổng hợp báo cáo theo segment merchant (soundbox, SMB, key merchant...), bao gồm xu hướng thị trường, sản phẩm mới, động thái đối thủ, chính sách/quy định, và gợi ý talking points cho đội BD. Triển khai trên GreenNode AgentBase với async job API.
 
 Logic chi tiết và quy tắc nội dung nằm trong [`CLAUDE.md`](./CLAUDE.md).
 
