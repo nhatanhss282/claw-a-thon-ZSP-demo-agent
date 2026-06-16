@@ -72,8 +72,15 @@ jobs:
           PAYLOAD=$(python3 -c "
           import json
           print(json.dumps({
+            'description': '',
             'imageUrl': '$IMAGE_URL',
             'flavorId': '$FLAVOR',
+            'autoscaling': {
+              'minReplicas': 1,
+              'maxReplicas': 1,
+              'cpuUtilization': 50,
+              'memoryUtilization': 50
+            },
             'imageAuth': {
               'registryUrl': '$REGISTRY',
               'auth': '${{ steps.imageauth.outputs.AUTH }}'
